@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡野栖居 - 核心优势</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fa fa-leaf"></i>
+                <span>乡野栖居</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="stores.html">合作店铺</a></li>
+                <li><a href="index.html#product">产品服务</a></li>
+                <li><a href="brand-positioning.html">品牌定位</a></li>
+                <li><a href="platform-design.html">平台设计</a></li>
+                <li><a href="core-advantage.html" class="active">核心优势</a></li>
+                <li><a href="contact.html" class="btn">联系我们</a></li>
+            </ul>
+            <div class="mobile-menu">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero">
+        <div class="container">
+            <h1>核心优势</h1>
+            <p>构建差异化竞争力，实现社会效益与经济效益并重</p>
+            <a href="#advantage" class="btn primary-btn">了解详情</a>
+        </div>
+    </section>
+
+    <!-- 核心优势模块 -->
+    <section id="advantage" class="core-advantage">
+        <div class="container">
+            <div class="section-header">
+                <h2>核心优势</h2>
+                <p>构建差异化竞争力，实现社会效益与经济效益并重</p>
+            </div>
+            <div class="advantage-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa fa-heart"></i>
+                    </div>
+                    <h3>情感+场景商业模式</h3>
+                    <p>贩卖“逃离城市的自由想象”和“归园田居的情感解决方案”，通过“产品+内容+体验”深度融合，建立高用户忠诚度和品牌溢价</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa fa-link"></i>
+                    </div>
+                    <h3>深度整合供应链</h3>
+                    <p>通过“订单农业”“设计师驻留计划”介入上游，保证产品独特性，掌握商品背后故事线，摆脱同质化价格战</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa fa-bar-chart"></i>
+                    </div>
+                    <h3>数据驱动精准运营</h3>
+                    <p>凭借数据中台实现个性化推送和精准营销，优化引流渠道效果，形成稳定增长飞轮</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">
+                        <i class="fa fa-flag"></i>
+                    </div>
+                    <h3>契合国家战略</h3>
+                    <p>响应“乡村振兴”“非遗保护”“青年创新创业”战略，实现农民增收、非遗传承、青年创业支持，获政策支持优势</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-logo">
+                    <i class="fa fa-leaf"></i>
+                    <span>乡野栖居</span>
+                    <p>连接城市与乡村，赋能传统与现代</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>平台服务</h4>
+                        <ul>
+                            <li><a href="#">线上商城</a></li>
+                            <li><a href="#">内容社区</a></li>
+                            <li><a href="#">体验活动</a></li>
+                            <li><a href="#">品牌合作</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h4>关于我们</h4>
+                        <ul>
+                            <li><a href="brand-positioning.html">品牌定位</a></li>
+                            <li><a href="platform-design.html">平台设计</a></li>
+                            <li><a href="core-advantage.html">核心优势</a></li>
+                            <li><a href="contact.html">联系我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2023 乡野栖居 版权所有
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-weibo"></i></a>
+                    <a href="#"><i class="fa fa-weixin"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                backToTop.classList.add('show');
+            } else {
+                navbar.classList.remove('scrolled');
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // 返回顶部功能
+        document.querySelector('.back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 移动端菜单
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>

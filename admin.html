@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺管理 - 乡野栖居</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .admin-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .admin-form {
+            flex: 1;
+            min-width: 300px;
+            background-color: #f9f7f3;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .admin-list {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .store-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .store-item-info {
+            flex: 1;
+        }
+        
+        .store-item-name {
+            font-weight: 500;
+            color: #386641;
+        }
+        
+        .store-item-location {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .store-item-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .edit-btn {
+            color: #3498db;
+        }
+        
+        .delete-btn {
+            color: #e74c3c;
+        }
+        
+        .edit-btn:hover, .delete-btn:hover {
+            opacity: 0.8;
+        }
+        
+        .tag-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tag-input {
+            flex: 1;
+        }
+        
+        .added-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 20px;
+        }
+        
+        .added-tag {
+            background-color: #f0f7e8;
+            color: #6a994e;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .remove-tag {
+            cursor: pointer;
+            font-size: 0.7rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div id="navbar-container"></div>
+
+    <!-- 管理员页面 -->
+    <section class="product-service">
+        <div class="container">
+            <div class="section-header">
+                <h2>店铺管理</h2>
+                <p>添加、编辑或删除合作店铺信息</p>
+            </div>
+            
+            <div class="admin-container">
+                <div class="admin-form">
+                    <h3 id="formTitle">添加新店铺</h3>
+                    <form id="storeForm">
+                        <input type="hidden" id="storeId">
+                        
+                        <div class="form-group">
+                            <label for="name">店铺名称</label>
+                            <input type="text" id="name" placeholder="请输入店铺名称" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="image">店铺图片URL</label>
+                            <input type="text" id="image" placeholder="请输入图片URL" required>
+                            <small style="color: #666; display: block; margin-top: 5px;">可以使用 picsum.photos 提供的示例图片</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="location">地理位置</label>
+                            <input type="text" id="location" placeholder="请输入地理位置" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contact">联系电话</label>
+                            <input type="tel" id="contact" placeholder="请输入联系电话" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">店铺描述</label>
+                            <textarea id="description" rows="4" placeholder="请输入店铺描述" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>标签</label>
+                            <div class="tag-input-group">
+                                <input type="text" id="tagInput" class="tag-input" placeholder="输入标签后按回车添加">
+                                <button type="button" class="btn secondary-btn" onclick="addTag()">添加</button>
+                            </div>
+                            <div class="added-tags" id="addedTags"></div>
+                            <input type="hidden" id="tagsInput">
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn primary-btn">保存</button>
+                            <button type="button" class="btn secondary-btn" onclick="resetForm()">重置</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="admin-list">
+                    <h3>店铺列表</h3>
+                    <div id="storeList">
+                        <!-- 店铺列表将通过JS动态加载 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <div id="footer-container"></div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        let currentTags = [];
+        
+        // 加载导航栏和页脚
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-container').innerHTML = data;
+                    initNavbar();
+                });
+                
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-container').innerHTML = data;
+                });
+                
+            // 加载店铺数据
+            loadStores();
+            
+            // 标签输入框回车事件
+            document.getElementById('tagInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addTag();
+                }
+            });
+            
+            // 表单提交事件
+            document.getElementById('storeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveStore();
+            });
+        });
+
+        // 加载店铺数据
+        function loadStores() {
+            let stores = JSON.parse(localStorage.getItem('stores')) || [];
+            renderStoreList(stores);
+        }
+
+        // 渲染店铺列表
+        function renderStoreList(stores) {
+            const storeList = document.getElementById('storeList');
+            storeList.innerHTML = '';
+            
+            if (stores.length === 0) {
+                storeList.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">暂无店铺数据</p>';
+                return;
+            }
+            
+            stores.forEach(store => {
+                const storeItem = document.createElement('div');
+                storeItem.className = 'store-item';
+                
+                storeItem.innerHTML = `
+                    <div class="store-item-info">
+                        <div class="store-item-name">${store.name}</div>
+                        <div class="store-item-location">${store.location}</div>
+                    </div>
+                    <div class="store-item-actions">
+                        <button class="action-btn edit-btn" onclick="editStore(${store.id})">
+                            <i class="fa fa-pencil"></i>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteStore(${store.id})">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                
+                storeList.appendChild(storeItem);
+            });
+        }
+
+        // 添加标签
+        function addTag() {
+            const tagInput = document.getElementById('tagInput');
+            const tag = tagInput.value.trim();
+            
+            if (tag && !currentTags.includes(tag)) {
+                currentTags.push(tag);
+                updateTagsDisplay();
+                tagInput.value = '';
+            }
+        }
+
+        // 更新标签显示
+        function updateTagsDisplay() {
+            const addedTags = document.getElementById('addedTags');
+            addedTags.innerHTML = '';
+            
+            currentTags.forEach((tag, index) => {
+                const tagElement = document.createElement('div');
+                tagElement.className = 'added-tag';
+                tagElement.innerHTML = `
+                    ${tag}
+                    <span class="remove-tag" onclick="removeTag(${index})">×</span>
+                `;
+                addedTags.appendChild(tagElement);
+            });
+            
+            // 更新隐藏输入框的值
+            document.getElementById('tagsInput').value = currentTags.join(',');
+        }
+
+        // 移除标签
+        function removeTag(index) {
+            currentTags.splice(index, 1);
+            updateTagsDisplay();
+        }
+
+        // 保存店铺
+        function saveStore() {
+            const id = document.getElementById('storeId').value;
+            const name = document.getElementById('name').value;
+            const image = document.getElementById('image').value;
+            const location = document.getElementById('location').value;
+            const contact = document.getElementById('contact').value;
+            const description = document.getElementById('description').value;
+            const tags = currentTags;
+            
+            let stores = JSON.parse(localStorage.getItem('stores')) || [];
+            
+            if (id) {
+                // 编辑现有店铺
+                const index = stores.findIndex(store => store.id === parseInt(id));
+                if (index !== -1) {
+                    stores[index] = {
+                        ...stores[index],
+                        name,
+                        image,
+                        location,
+                        contact,
+                        description,
+                        tags
+                    };
+                }
+            } else {
+                // 添加新店铺
+                const newId = stores.length > 0 ? Math.max(...stores.map(s => s.id)) + 1 : 1;
+                stores.push({
+                    id: newId,
+                    name,
+                    image,
+                    location,
+                    contact,
+                    description,
+                    tags
+                });
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('stores', JSON.stringify(stores));
+            
+            // 重新加载店铺列表
+            loadStores();
+            
+            // 重置表单
+            resetForm();
+            
+            // 显示成功消息
+            alert(id ? '店铺更新成功' : '店铺添加成功');
+        }
+
+        // 编辑店铺
+        function editStore(id) {
+            const stores = JSON.parse(localStorage.getItem('stores')) || [];
+            const store = stores.find(s => s.id === id);
+            
+            if (store) {
+                document.getElementById('formTitle').textContent = '编辑店铺';
+                document.getElementById('storeId').value = store.id;
+                document.getElementById('name').value = store.name;
+                document.getElementById('image').value = store.image;
+                document.getElementById('location').value = store.location;
+                document.getElementById('contact').value = store.contact;
+                document.getElementById('description').value = store.description;
+                
+                // 处理标签
+                currentTags = [...store.tags];
+                updateTagsDisplay();
+                
+                // 滚动到表单
+                document.querySelector('.admin-form').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // 删除店铺
+        function deleteStore(id) {
+            if (confirm('确定要删除这个店铺吗？')) {
+                let stores = JSON.parse(localStorage.getItem('stores')) || [];
+                stores = stores.filter(store => store.id !== id);
+                
+                // 保存到本地存储
+                localStorage.setItem('stores', JSON.stringify(stores));
+                
+                // 重新加载店铺列表
+                loadStores();
+            }
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('formTitle').textContent = '添加新店铺';
+            document.getElementById('storeForm').reset();
+            document.getElementById('storeId').value = '';
+            currentTags = [];
+            updateTagsDisplay();
+        }
+
+        // 导航栏功能初始化
+        function initNavbar() {
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                const backToTop = document.querySelector('.back-to-top');
+                
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                    backToTop.classList.add('show');
+                } else {
+                    navbar.classList.remove('scrolled');
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            // 返回顶部功能
+            document.querySelector('.back-to-top').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 导航菜单点击跳转
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // 为当前页面添加活跃状态
+                    document.querySelectorAll('.nav-menu a').forEach(item => {
+                        const currentPage = window.location.pathname.split('/').pop();
+                        const linkPage = item.getAttribute('href');
+                        
+                        if (currentPage === linkPage) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // 移动端菜单切换
+            document.querySelector('.mobile-menu').addEventListener('click', function() {
+                const navMenu = document.querySelector('.nav-menu');
+                navMenu.classList.toggle('show');
+            });
+        }
+    </script>
+</body>
+</html>

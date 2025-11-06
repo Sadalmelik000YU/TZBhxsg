@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合作店铺 - 乡野栖居</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .store-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .store-card {
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .store-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .store-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .store-info {
+            padding: 20px;
+        }
+        
+        .store-name {
+            font-size: 1.3rem;
+            color: #386641;
+            margin-bottom: 10px;
+        }
+        
+        .store-location, .store-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .store-description {
+            margin-top: 15px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .store-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .store-tag {
+            background-color: #f0f7e8;
+            color: #6a994e;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .admin-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div id="navbar-container"></div>
+    <body class="stores-page">
+    <!-- 店铺列表 -->
+    <section class="product-service">
+        <div class="container">
+            <div class="section-header">
+                <h2>合作店铺</h2>
+                <p>探索全国各地的优质乡村体验店铺，感受不一样的乡野生活</p>
+            </div>
+            
+            <div class="store-grid" id="storeGrid">
+                <!-- 店铺卡片将通过JS动态加载 -->
+            </div>
+            
+            <div class="admin-link">
+                <a href="admin.html" class="btn secondary-btn">店铺管理 <i class="fa fa-cog"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <div id="footer-container"></div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 加载导航栏和页脚
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-container').innerHTML = data;
+                    initNavbar();
+                });
+                
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-container').innerHTML = data;
+                });
+                
+            // 加载店铺数据
+            loadStores();
+        });
+
+        // 从本地存储加载店铺数据
+        function loadStores() {
+            let stores = JSON.parse(localStorage.getItem('stores')) || [
+                {
+                    id: 1,
+                    name: "青山小筑",
+                    image: "https://picsum.photos/id/110/600/400",
+                    location: "浙江省杭州市临安区太湖源镇",
+                    contact: "13812345678",
+                    description: "坐落于青山绿水间的民宿，提供农家菜和手工体验活动，远离城市喧嚣。",
+                    tags: ["民宿", "农家菜", "手工体验"]
+                },
+                {
+                    id: 2,
+                    name: "田野工坊",
+                    image: "https://picsum.photos/id/28/600/400",
+                    location: "江苏省苏州市吴中区东山镇",
+                    contact: "13987654321",
+                    description: "专注于传统手工艺传承的工坊，提供陶艺、编织等多种体验课程。",
+                    tags: ["手工艺", "陶艺", "工作坊"]
+                },
+                {
+                    id: 3,
+                    name: "林间书屋",
+                    image: "https://picsum.photos/id/15/600/400",
+                    location: "安徽省黄山市黟县宏村镇",
+                    contact: "13756789012",
+                    description: "隐藏在竹林中的乡村书屋，提供阅读空间和自然教育课程。",
+                    tags: ["阅读", "自然教育", "亲子活动"]
+                }
+            ];
+            
+            // 保存到本地存储
+            localStorage.setItem('stores', JSON.stringify(stores));
+            
+            // 渲染店铺列表
+            renderStores(stores);
+        }
+
+        // 渲染店铺列表
+        function renderStores(stores) {
+            const storeGrid = document.getElementById('storeGrid');
+            storeGrid.innerHTML = '';
+            
+            stores.forEach(store => {
+                const storeCard = document.createElement('div');
+                storeCard.className = 'store-card';
+                storeCard.onclick = () => {
+                    window.location.href = `store-detail.html?id=${store.id}`;
+                };
+                
+                // 构建标签HTML
+                let tagsHtml = '';
+                store.tags.forEach(tag => {
+                    tagsHtml += `<span class="store-tag">${tag}</span>`;
+                });
+                
+                storeCard.innerHTML = `
+                    <img src="${store.image}" alt="${store.name}" class="store-image">
+                    <div class="store-info">
+                        <h3 class="store-name">${store.name}</h3>
+                        <div class="store-location">
+                            <i class="fa fa-map-marker"></i>
+                            <span>${store.location}</span>
+                        </div>
+                        <div class="store-contact">
+                            <i class="fa fa-phone"></i>
+                            <span>${store.contact}</span>
+                        </div>
+                        <p class="store-description">${store.description}</p>
+                        <div class="store-tags">
+                            ${tagsHtml}
+                        </div>
+                    </div>
+                `;
+                
+                storeGrid.appendChild(storeCard);
+            });
+        }
+
+        // 导航栏功能初始化
+        function initNavbar() {
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                const backToTop = document.querySelector('.back-to-top');
+                
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                    backToTop.classList.add('show');
+                } else {
+                    navbar.classList.remove('scrolled');
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            // 返回顶部功能
+            document.querySelector('.back-to-top').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 导航菜单点击跳转
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // 为当前页面添加活跃状态
+                    document.querySelectorAll('.nav-menu a').forEach(item => {
+                        const currentPage = window.location.pathname.split('/').pop();
+                        const linkPage = item.getAttribute('href');
+                        
+                        if (currentPage === linkPage) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // 移动端菜单切换
+            document.querySelector('.mobile-menu').addEventListener('click', function() {
+                const navMenu = document.querySelector('.nav-menu');
+                navMenu.classList.toggle('show');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>店铺详情 - 乡野栖居</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <style>
+        .store-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .store-detail-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .store-detail-image img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .store-detail-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .store-detail-name {
+            font-size: 1.8rem;
+            color: #386641;
+            margin-bottom: 20px;
+        }
+        
+        .store-detail-location, .store-detail-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .store-detail-description {
+            margin: 20px 0;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        .store-detail-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .store-detail-tag {
+            background-color: #f0f7e8;
+            color: #6a994e;
+            padding: 5px 15px;
+            border-radius: 15px;
+        }
+        
+        .store-detail-activities h3 {
+            color: #386641;
+            margin: 30px 0 15px;
+            font-size: 1.4rem;
+        }
+        
+        .activity-item {
+            background-color: #f9f7f3;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #6a994e;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <div id="navbar-container"></div>
+
+    <!-- 店铺详情 -->
+    <section class="product-service">
+        <div class="container">
+            <a href="stores.html" class="back-link"><i class="fa fa-arrow-left"></i> 返回店铺列表</a>
+            
+            <div class="section-header">
+                <h2 id="storeDetailTitle">店铺详情</h2>
+            </div>
+            
+            <div class="store-detail" id="storeDetailContent">
+                <!-- 店铺详情将通过JS动态加载 -->
+                <div class="loading" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                    <i class="fa fa-spinner fa-spin fa-3x" style="color: #6a994e;"></i>
+                    <p style="margin-top: 20px; color: #666;">加载中...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <div id="footer-container"></div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript -->
+    <script>
+        // 加载导航栏和页脚
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar-container').innerHTML = data;
+                    initNavbar();
+                });
+                
+            fetch('footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer-container').innerHTML = data;
+                });
+                
+            // 获取店铺ID并加载详情
+            const urlParams = new URLSearchParams(window.location.search);
+            const storeId = parseInt(urlParams.get('id'));
+            loadStoreDetail(storeId);
+        });
+
+        // 加载店铺详情
+        function loadStoreDetail(storeId) {
+            const stores = JSON.parse(localStorage.getItem('stores')) || [];
+            const store = stores.find(s => s.id === storeId);
+            
+            if (store) {
+                renderStoreDetail(store);
+            } else {
+                document.getElementById('storeDetailContent').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                        <i class="fa fa-exclamation-circle fa-3x" style="color: #e74c3c;"></i>
+                        <p style="margin-top: 20px; color: #666;">未找到该店铺信息</p>
+                    </div>
+                `;
+            }
+        }
+
+        // 渲染店铺详情
+        function renderStoreDetail(store) {
+            document.getElementById('storeDetailTitle').textContent = store.name;
+            
+            // 构建标签HTML
+            let tagsHtml = '';
+            store.tags.forEach(tag => {
+                tagsHtml += `<span class="store-detail-tag">${tag}</span>`;
+            });
+            
+            document.getElementById('storeDetailContent').innerHTML = `
+                <div class="store-detail-image">
+                    <img src="${store.image}" alt="${store.name}">
+                </div>
+                <div class="store-detail-info">
+                    <h3 class="store-detail-name">${store.name}</h3>
+                    <div class="store-detail-location">
+                        <i class="fa fa-map-marker"></i>
+                        <span>${store.location}</span>
+                    </div>
+                    <div class="store-detail-contact">
+                        <i class="fa fa-phone"></i>
+                        <span>${store.contact}</span>
+                    </div>
+                    <div class="store-detail-tags">
+                        ${tagsHtml}
+                    </div>
+                    <div class="store-detail-description">
+                        <p>${store.description}</p>
+                        <p style="margin-top: 15px;">欢迎来到${store.name}，在这里您可以体验到最纯正的乡村生活。我们提供舒适的环境和丰富的活动，让您远离城市的喧嚣，找回内心的宁静。</p>
+                    </div>
+                    <div class="store-detail-activities">
+                        <h3>特色活动</h3>
+                        <div class="activity-item">
+                            <h4>乡村体验之旅</h4>
+                            <p>深入了解当地文化和传统，参与农事活动，体验乡村生活。</p>
+                        </div>
+                        <div class="activity-item">
+                            <h4>手工艺工作坊</h4>
+                            <p>学习传统手工艺制作，亲手制作特色纪念品。</p>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="btn primary-btn" style="margin-top: 20px;">预约体验</a>
+                </div>
+            `;
+        }
+
+        // 导航栏功能初始化
+        function initNavbar() {
+            // 导航栏滚动效果
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                const backToTop = document.querySelector('.back-to-top');
+                
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                    backToTop.classList.add('show');
+                } else {
+                    navbar.classList.remove('scrolled');
+                    backToTop.classList.remove('show');
+                }
+            });
+
+            // 返回顶部功能
+            document.querySelector('.back-to-top').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 导航菜单点击跳转
+            document.querySelectorAll('.nav-menu a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // 为当前页面添加活跃状态
+                    document.querySelectorAll('.nav-menu a').forEach(item => {
+                        const currentPage = window.location.pathname.split('/').pop();
+                        const linkPage = item.getAttribute('href');
+                        
+                        if (currentPage === linkPage) {
+                            item.classList.add('active');
+                        } else {
+                            item.classList.remove('active');
+                        }
+                    });
+                });
+            });
+
+            // 移动端菜单切换
+            document.querySelector('.mobile-menu').addEventListener('click', function() {
+                const navMenu = document.querySelector('.nav-menu');
+                navMenu.classList.toggle('show');
+            });
+        }
+    </script>
+</body>
+</html>

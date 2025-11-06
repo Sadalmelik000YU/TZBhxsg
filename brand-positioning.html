@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乡野栖居 - 品牌定位</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fa fa-leaf"></i>
+                <span>乡野栖居</span>
+            </div>
+           <ul class="nav-menu">
+               <li><a href="index.html">首页</a></li>
+               <li><a href="stores.html">合作店铺</a></li>
+               <li><a href="index.html#product">产品服务</a></li>
+               <li><a href="brand-positioning.html" class="active">品牌定位</a></li>
+               <li><a href="platform-design.html">平台设计</a></li>
+               <li><a href="core-advantage.html">核心优势</a></li>
+               <li><a href="contact.html" class="btn">联系我们</a></li>
+           </ul>
+            <div class="mobile-menu">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区 -->
+    <section class="hero">
+        <div class="container">
+            <h1>品牌定位</h1>
+            <p>重新定义乡村价值，打造精神栖息地</p>
+            <a href="#positioning" class="btn primary-btn">了解详情</a>
+        </div>
+    </section>
+
+    <!-- 品牌定位模块 -->
+    <section id="positioning" class="brand-positioning">
+        <div class="container">
+            <div class="section-header">
+                <h2>品牌定位</h2>
+                <p>重新定义乡村价值，打造精神栖息地</p>
+            </div>
+            <div class="positioning-content">
+                <div class="positioning-text">
+                    <h3>新时代乡村生活方式的整合者与引领者</h3>
+                    <p>我们不仅是电商平台，更是一个文化品牌和社群组织。致力于为被“困”于都市混凝土森林中的年轻人，提供一个可触摸、可体验、可消费的精神栖息地和自由空间。</p>
+                    <div class="slogan-list">
+                        <h4>品牌Slogan（备选）：</h4>
+                        <ul>
+                            <li><i class="fa fa-check-circle"></i> 栖心乡野，归于日常（强调心灵归宿）</li>
+                            <li><i class="fa fa-check-circle"></i> 把远方的生活，装进你的日常（突出连接价值）</li>
+                            <li><i class="fa fa-check-circle"></i> 逃离城市计划，从这里开始（行动号召）</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="positioning-image">
+                    <img src="https://picsum.photos/id/110/600/400" alt="乡村生活">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-logo">
+                    <i class="fa fa-leaf"></i>
+                    <span>乡野栖居</span>
+                    <p>连接城市与乡村，赋能传统与现代</p>
+                </div>
+                <div class="footer-links">
+                    <div class="link-group">
+                        <h4>平台服务</h4>
+                        <ul>
+                            <li><a href="#">线上商城</a></li>
+                            <li><a href="#">内容社区</a></li>
+                            <li><a href="#">体验活动</a></li>
+                            <li><a href="#">品牌合作</a></li>
+                        </ul>
+                    </div>
+                    <div class="link-group">
+                        <h4>关于我们</h4>
+                        <ul>
+                            <li><a href="brand-positioning.html">品牌定位</a></li>
+                            <li><a href="platform-design.html">平台设计</a></li>
+                            <li><a href="core-advantage.html">核心优势</a></li>
+                            <li><a href="contact.html">联系我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    &copy; 2023 乡野栖居 版权所有
+                </div>
+                <div class="social-icons">
+                    <a href="#"><i class="fa fa-weibo"></i></a>
+                    <a href="#"><i class="fa fa-weixin"></i></a>
+                    <a href="#"><i class="fa fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            const backToTop = document.querySelector('.back-to-top');
+            
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+                backToTop.classList.add('show');
+            } else {
+                navbar.classList.remove('scrolled');
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // 返回顶部功能
+        document.querySelector('.back-to-top').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 移动端菜单
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.querySelector('.nav-menu').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
